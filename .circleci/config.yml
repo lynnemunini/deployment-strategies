@@ -1,4 +1,6 @@
 version: 2.1
+orbs: 
+  slack: circleci/slack@4.10.1
 
 jobs:
   #BUILD PHASE
@@ -19,6 +21,10 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          message: "Build front-end failed"
 
   build-backend:
     docker:
@@ -37,6 +43,10 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          message: "Build backend failed"
   
   #TEST PHASE
   test-frontend:
@@ -53,6 +63,10 @@ jobs:
             cd frontend
             npm install
             npm run test
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          message: "Test front-end failed"
 
   test-backend:
     docker:
@@ -68,7 +82,11 @@ jobs:
             cd backend
             npm install
             npm run test
-
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          message: "Test backend failed"
+          
   #ANALYZE PHASE
   scan-frontend:
     docker:
@@ -85,6 +103,10 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          message: "Scan front-end failed"
   
   scan-backend:
     docker:
@@ -101,6 +123,10 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          message: "Scan backend failed"
 
 workflows:
   default:

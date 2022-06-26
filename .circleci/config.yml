@@ -24,7 +24,7 @@ jobs:
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
-          message: "Build front-end failed"
+          template: basic_fail_1
 
   build-backend:
     docker:
@@ -46,7 +46,7 @@ jobs:
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
-          message: "Build backend failed"
+          template: basic_fail_1
   
   #TEST PHASE
   test-frontend:
@@ -66,7 +66,7 @@ jobs:
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
-          message: "Test front-end failed"
+          template: basic_fail_1
 
   test-backend:
     docker:
@@ -85,7 +85,7 @@ jobs:
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
-          message: "Test backend failed"
+          template: basic_fail_1
           
   #ANALYZE PHASE
   scan-frontend:
@@ -106,7 +106,7 @@ jobs:
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
-          message: "Scan front-end failed"
+          template: basic_fail_1
   
   scan-backend:
     docker:
@@ -126,7 +126,7 @@ jobs:
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
-          message: "Scan backend failed"
+          template: basic_fail_1
 
 workflows:
   default:

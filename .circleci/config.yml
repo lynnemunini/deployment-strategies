@@ -180,7 +180,26 @@ jobs:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
-
+  
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: $FINGERPRINT_ID
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            yum install -y tar gzip
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
 
 workflows:
   default:
@@ -197,3 +216,5 @@ workflows:
           requires: [build-backend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]

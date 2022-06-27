@@ -1,26 +1,16 @@
-# Install Python, Update/upgrade packages, Install nodejs, npm, and pm2
 ---
-- name: "Install Python"
-  become: yes
-  become_method: sudo
-  raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
-  changed_when: false
-
 - name: "Update packages"
   become: yes
-  become_method: sudo
   apt:
     update_cache: yes
 
 - name: "Upgrade packages"
   become: yes
-  become_method: sudo
   apt:
     upgrade: yes
 
 - name: "install nodejs and npm dependencies"
   become: yes
-  become_method: sudo
   apt:
     name: ["nodejs", "npm"]
     state: latest
@@ -29,7 +19,6 @@
 # Install pm2
 - name: "install pm2"
   become: yes
-  become_method: sudo
   apt:
     name: pm2
     state: latest

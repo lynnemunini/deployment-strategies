@@ -190,6 +190,7 @@ jobs:
           fingerprints: $FINGERPRINT_ID
       - attach_workspace:
           at: .
+      - run: cat .circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |

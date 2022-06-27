@@ -11,7 +11,7 @@ commands:
     steps:
       - run:
           name: Destroy environments
-          when: on_fail
+          when: <<parameters.when>>
           command: |
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
@@ -176,13 +176,13 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .circleci/ansible/inventory.txt
-      - destroy-environment:
-          when: on_fail               
+            - .circleci/ansible/inventory.txt       
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
+      - destroy-environment:
+          when: on_fail
       
   
   configure-infrastructure:
@@ -205,12 +205,12 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       # On_Fail
-      - destroy-environment:
-          when: on_fail
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
+      - destroy-environment:
+          when: on_fail
 
 workflows:
   default:

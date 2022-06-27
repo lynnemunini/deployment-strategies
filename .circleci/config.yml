@@ -6,9 +6,7 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      - name: when
-        description: event on which to destroy the environment.
-        required: true
+      when:
         type: string
     steps:
       - run:

@@ -3,7 +3,7 @@
 - name: "configuration play." 
   hosts: all
   user: ubuntu
-  become: true
+  become: yes
   become_method: sudo
   become_user: root  
   gather_facts: false
@@ -17,7 +17,7 @@
       wait_for_connection:
 
     - name: "install python for Ansible."
-      become: true
+      become: yes
       become_method: sudo
       raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
       changed_when: false

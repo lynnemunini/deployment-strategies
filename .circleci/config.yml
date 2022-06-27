@@ -189,9 +189,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: $FINGERPRINT_ID
       - attach_workspace:
-          root: .
-          paths:
-            - .circleci/ansible/inventory.txt
+          at: .
       - run:
           name: Install dependencies
           command: |

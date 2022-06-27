@@ -31,5 +31,5 @@
   become: yes
   become_method: sudo
   apt:
-    name: ["pm2"]
+    name: pm2
     state: latest

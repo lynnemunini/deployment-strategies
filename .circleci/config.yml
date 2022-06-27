@@ -176,10 +176,14 @@ jobs:
           paths:
             - .circleci/ansible/inventory.txt
 
+      - destroy-environment:
+          when: on_fail
+          
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
+      
   
   configure-infrastructure:
     docker:
@@ -199,7 +203,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i .circleci/ansible/inventory.txt configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml
 
 workflows:
   default:

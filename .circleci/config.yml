@@ -166,7 +166,6 @@ jobs:
           name: Add back-end ip to ansible inventory
           # Fetch the public IP of the EC2 instance and append it to the inventory
           command: |
-            echo "[web]" >> .circleci/ansible/inventory.txt
             aws ec2 describe-instances \
               --filters "Name=tag:project,Values=udapeople" \
               --query "Reservations[*].Instances[*].PublicIpAddress" \
@@ -200,7 +199,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i .circleci/ansible/inventory.txt configure-server.yml
 
 workflows:
   default:

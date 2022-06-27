@@ -172,8 +172,8 @@ jobs:
               --output text > .circleci/ansible/inventory.txt
 
       - persist_to_workspace:
-          paths:
-            - .circleci/ansible/inventory.txt
+          root: ~/.circleci/ansible
+          paths: [inventory.txt]
 
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL

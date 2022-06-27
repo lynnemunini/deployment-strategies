@@ -176,7 +176,7 @@ jobs:
           paths:
             - .circleci/ansible/inventory.txt
 
-      - destroy-environment          
+      - destroy-environment               
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail

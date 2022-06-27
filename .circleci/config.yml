@@ -5,6 +5,11 @@ orbs:
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      - name: when
+        description: event on which to destroy the environment.
+        required: true
+        type: string
     steps:
       - run:
           name: Destroy environments
@@ -170,13 +175,12 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" \
               --query "Reservations[*].Instances[*].PublicIpAddress" \
               --output text > .circleci/ansible/inventory.txt
-
       - persist_to_workspace:
           root: .
           paths:
             - .circleci/ansible/inventory.txt
-
-      - destroy-environment               
+      - destroy-environment:
+          when: on_fail               
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
@@ -203,7 +207,8 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       # On_Fail
-      - destroy-environment
+      - destroy-environment:
+          when: on_fail
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail

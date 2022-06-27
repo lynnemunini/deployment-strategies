@@ -192,7 +192,6 @@ jobs:
           fingerprints: $FINGERPRINT_ID
       - attach_workspace:
           at: .
-      - run: cat .circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |
@@ -201,6 +200,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
+            cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
 
 workflows:

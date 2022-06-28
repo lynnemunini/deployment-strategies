@@ -10,10 +10,14 @@ commands:
         type: string
     steps:
       - run:
-          name: Destroy environments
+          name: Destroy front-end cloudformation stack
           when: <<parameters.when>>
           command: |
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: Destroy back-end cloudformation stack
+          when: <<parameters.when>>
+          command: |
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
 
 jobs:
@@ -191,7 +195,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: $FINGERPRINT_ID
+          fingerprints: $FINGERPRINT_I
       - attach_workspace:
           at: .
       - run:
@@ -205,13 +209,12 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-      # On_Fail
+      - destroy-environment:
+          when: on_fail
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
-      - destroy-environment:
-          when: on_fail
 
 workflows:
   default:

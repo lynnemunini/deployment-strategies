@@ -195,7 +195,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: $FINGERPRINT_I
+          fingerprints: $FINGERPRINT_ID
       - attach_workspace:
           at: .
       - run:

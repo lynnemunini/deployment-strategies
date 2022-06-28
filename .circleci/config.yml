@@ -196,8 +196,9 @@ jobs:
           at: .
       - run:
           name: Install dependencies
+          working_directory: ./.circleci/ansible
           command: |
-            a add --update ansible
+            apk add --update ansible
       - run:
           name: Configure server
           command: |

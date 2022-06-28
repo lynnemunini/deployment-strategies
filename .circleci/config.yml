@@ -188,7 +188,7 @@ jobs:
       - destroy-environment:
           when: on_fail
       
-  
+  # FIXME: aws command not found on circleci on job fail
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11

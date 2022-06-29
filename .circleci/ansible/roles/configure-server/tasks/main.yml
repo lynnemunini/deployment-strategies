@@ -24,8 +24,3 @@
     global: yes
     production: yes
     state: present
-
-# Start pm2 web server
-- name: "start pm2 web server"
-  become: yes
-  shell: pm2 start npm -- start

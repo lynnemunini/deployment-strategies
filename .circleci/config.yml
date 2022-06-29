@@ -252,7 +252,7 @@ jobs:
       - run:
           name: Install tar and gzip
           command: |
-            yum add -y tar gzip
+            apk add -y tar gzip
       - attach_workspace:
           at: .
       - run:
@@ -272,7 +272,6 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            yum add -y tar gzip
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
@@ -295,14 +294,26 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Install tar and gzip
+          name: Install tar gzip
           command: |
-            yum add -y tar gzip
+            apk add --update tar gzip
       - run:
           name: Install ansible
           working_directory: ./.circleci/ansible
           command: |
-            apk add --update ansible
+            apk add --update ansible 
+      - run:
+          name: Install aws cli
+          command: |
+            pip install awscli
+      - run:
+          name: Install nodejs
+          command: |
+            apk add --update nodejs
+      - run:
+          name: Install npm
+          command: |
+            apk add --update npm
       - run:
           name: Deploy backend
           command: |

@@ -13,12 +13,12 @@ commands:
           name: Destroy front-end cloudformation stack
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${{workflow_id}}
+            aws cloudformation delete-stack --stack-name udapeople-frontend-${{parameters.workflow_id}}
       - run:
           name: Destroy back-end cloudformation stack
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-backend-{{workflow_id}}
+            aws cloudformation delete-stack --stack-name udapeople-backend-{{parameters.workflow_id}}
 
 jobs:
   #BUILD PHASE
@@ -223,7 +223,10 @@ jobs:
       - run:
           name: Install AWS CLI dependencies
           command: |
-            apk add --no-cache aws-cli
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       # Run database migrations
       - run:
           name: Run database migrations

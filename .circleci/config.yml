@@ -251,6 +251,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - run:
+          name: Install tar utility
+          command: |
+            yum add --update tar gzip
       # Get backend url
       - run:
           name: Get backend url

@@ -246,15 +246,18 @@ jobs:
       
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - attach_workspace:
           at: .
       - run:
-          name: Install tar utility
+          name: Install AWS CLI dependencies
           command: |
-            yum add --update tar gzip
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       # Get backend url
       - run:
           name: Get backend url

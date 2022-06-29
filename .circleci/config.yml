@@ -182,7 +182,11 @@ jobs:
             - .circleci/ansible/inventory.txt  
       #TODO: Code to roll back on failure
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
 
       
   # FIXME: aws command not found on circleci on job fail
@@ -209,6 +213,10 @@ jobs:
       # TODO: Code to roll back on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
 
   # DEPLOY PHASE
   run-migrations:
@@ -216,8 +224,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
+      - attach_workspace:
+          at: .
       # Run database migrations
       - run:
           name: Run database migrations
@@ -236,6 +244,10 @@ jobs:
       # TODO: Code to roll back on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
       
   deploy-frontend:
     docker:
@@ -245,7 +257,10 @@ jobs:
       - attach_workspace:
           at: .
       # TODO: Install dependancies
-      - run: yum install -y tar gzip
+      - run:
+          name: Install tar and gzip
+          command: |
+            apk add -y tar gzip
       - run:
           name: Install ansible
           command: |
@@ -277,6 +292,10 @@ jobs:
       # TODO: Roll back on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
 
   deploy-backend:
     docker:

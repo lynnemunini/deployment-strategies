@@ -8,17 +8,19 @@ commands:
     parameters:
       when:
         type: string
+      workflow_id:
+        type: string
     steps:
       - run:
           name: Destroy front-end cloudformation stack
-          when: <<parameters.when>>
+          when: {{parameters.when}}
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-frontend-${{workflow_id}}
       - run:
           name: Destroy back-end cloudformation stack
-          when: <<parameters.when>>
+          when: {{parameters.when}}
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-backend-{{workflow_id}}
 
 jobs:
   #BUILD PHASE
@@ -182,7 +184,10 @@ jobs:
           root: .
           paths:
             - .circleci/ansible/inventory.txt  
-      #TODO: Code to roll back on failure     
+      #TODO: Code to roll back on failure
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail     
 
       
   # FIXME: aws command not found on circleci on job fail
@@ -207,6 +212,9 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       # TODO: Code to roll back on failure
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail
 
   # DEPLOY PHASE
   run-migrations:
@@ -216,13 +224,16 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - run:
+          name: Install AWS CLI dependencies
+          command: |
+            apk add --update awscli
       # Run database migrations
       - run:
           name: Run database migrations
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical --force
             npm run migrations > migrations_dump.txt
       # Send migration status to kvdb.io
       - run:
@@ -233,6 +244,9 @@ jobs:
               curl https://https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       # TODO: Code to roll back on failure
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail
       
   deploy-frontend:
     docker:
@@ -272,6 +286,9 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
       # Destroy the environment and rever the migration on fail
       # TODO: Roll back on failure
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail
 
   deploy-backend:
     docker:
@@ -301,7 +318,10 @@ jobs:
             echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # TODO: Code to roll back on failure   
+      # TODO: Code to roll back on failure
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail 
 
 
 workflows:

@@ -260,7 +260,7 @@ jobs:
       - run:
           name: Install tar and gzip
           command: |
-            apk add -y tar gzip
+            yum add -y tar gzip
       - run:
           name: Install ansible
           command: |
@@ -306,7 +306,10 @@ jobs:
           fingerprints: $FINGERPRINT_ID
       - attach_workspace:
           at: .
-      - run: yum install -y tar gzip
+      - run:
+          name: Install tar and gzip
+          command: |
+            yum add -y tar gzip
       - run:
           name: Install ansible
           working_directory: ./.circleci/ansible

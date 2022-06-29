@@ -246,7 +246,7 @@ jobs:
       
   deploy-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: amazon/aws-cli
     steps:
       - checkout
       - attach_workspace:
@@ -266,7 +266,6 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm install aws-cli-js
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive

@@ -180,7 +180,6 @@ jobs:
           root: .
           paths:
             - .circleci/ansible/inventory.txt  
-      #TODO: Code to roll back on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:
@@ -188,8 +187,6 @@ jobs:
           event: fail
           template: basic_fail_1
 
-      
-  # FIXME: aws command not found on circleci on job fail
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
@@ -210,7 +207,6 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-      # TODO: Code to roll back on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:
@@ -241,7 +237,6 @@ jobs:
             then
               curl https://https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-      # TODO: Code to roll back on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:
@@ -254,23 +249,16 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Install tar and gzip
+          command: |
+            yum add -y tar gzip
       - attach_workspace:
           at: .
-      # TODO: Install dependancies
-      # - run:
-      #     name: Install tar and gzip
-      #     command: |
-      #       yum add -y tar gzip
       - run:
           name: Install ansible
           command: |
             apk add --update ansible
-      - run:
-          name: Install node
-          command: |
-            curl -sL https://deb.nodesource.com/setup_12.x | bash -
-            apk add --update nodejs
-
       # Get backend url
       - run:
           name: Get backend url
@@ -289,8 +277,7 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
-      # Destroy the environment and rever the migration on fail
-      # TODO: Roll back on failure
+      # Destroy the environment and revert the migration on fail
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:
@@ -329,10 +316,8 @@ jobs:
             echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # TODO: Code to roll back on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-
 
 workflows:
   default:

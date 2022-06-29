@@ -223,7 +223,7 @@ jobs:
       - run:
           name: Install AWS CLI dependencies
           command: |
-            apk add --update awscli
+            apk add --no-cache aws-cli
       # Run database migrations
       - run:
           name: Run database migrations

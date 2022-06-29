@@ -173,20 +173,17 @@ jobs:
           name: Add back-end ip to ansible inventory
           # Fetch the public IP of the EC2 instance and append it to the inventory
           command: |
-            aws ec2 describe-instances \
+            export BACKEND_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:project,Values=udapeople" \
               --query "Reservations[*].Instances[*].PublicIpAddress" \
-              --output text > .circleci/ansible/inventory.txt
+              --output text)
+            echo ${BACKEND_IP} > .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: .
           paths:
-            - .circleci/ansible/inventory.txt       
-      - slack/notify:
-          channel: $SLACK_DEFAULT_CHANNEL
-          event: fail
-          template: basic_fail_1
-      - destroy-environment:
-          when: on_fail
+            - .circleci/ansible/inventory.txt  
+      #TODO: Code to roll back on failure     
+
       
   # FIXME: aws command not found on circleci on job fail
   configure-infrastructure:
@@ -209,12 +206,100 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-      - destroy-environment:
-          when: on_fail
-      - slack/notify:
-          channel: $SLACK_DEFAULT_CHANNEL
-          event: fail
-          template: basic_fail_1
+      # TODO: Code to roll back on failure
+
+  # DEPLOY PHASE
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      # Run database migrations
+      - run:
+          name: Run database migrations
+          command: |
+            cd backend
+            npm install
+            npm run migrations > migrations_dump.txt
+      # Send migration status to kvdb.io
+      - run:
+          name: Send migration status to kvdb.io
+          command: |
+            if grep -q "has been executed successfully." ~/UdaPeople/backend/migrations_dump.txt;
+            then
+              curl https://https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            fi
+      # TODO: Code to roll back on failure
+      
+  deploy-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      # TODO: Install dependancies
+      - run: yum install -y tar gzip
+      - run:
+          name: Install ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Install node
+          command: |
+            curl -sL https://deb.nodesource.com/setup_12.x | bash -
+            apk add --update nodejs
+
+      # Get backend url
+      - run:
+          name: Get backend url
+          command: |
+            export API_URL="http://${BACKEND_IP}:3000"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3000" > frontend/.env
+            cat frontend/.env
+      # Deploy frontend objects
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
+      # Destroy the environment and rever the migration on fail
+      # TODO: Roll back on failure
+
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: $FINGERPRINT_ID
+      - attach_workspace:
+          at: .
+      - run: yum install -y tar gzip
+      - run:
+          name: Install ansible
+          working_directory: ./.circleci/ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents of the inventory.txt file is ......."
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      # TODO: Code to roll back on failure   
+
 
 workflows:
   default:
@@ -233,3 +318,9 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]

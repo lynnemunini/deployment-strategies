@@ -228,10 +228,7 @@ jobs:
       - run:
           name: Run database migrations
           command: |
-            cd backend      - slack/notify:
-          channel: $SLACK_DEFAULT_CHANNEL
-          event: fail
-          template: basic_fail_1
+            cd backend
             npm install
             npm run migrations > migrations_dump.txt
       # Send migration status to kvdb.io
@@ -318,6 +315,7 @@ jobs:
           name: Install rsync
           command: |
             apk add --update rsync
+
       - run:
           name: Install npm
           command: |

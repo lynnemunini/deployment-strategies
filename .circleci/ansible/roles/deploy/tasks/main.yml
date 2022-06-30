@@ -1,5 +1,7 @@
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 ---
+- name : "show remote env"
+  shell : env
 - name: Create directory
   file:
     path: udaappdir
@@ -11,14 +13,17 @@
   copy:
     src: ../../backend/dist
     dest: udaappdir
+    recursive: yes
 
 - name: Copy modules
   become: yes
   copy:
     src: ../../backend/node_modules
     dest: udaappdir
+    recursive: yes
 
 - name: Start the app
+  become: yes
   shell: pm2 start ~/udaappdir/main.js -f
   environment:
     ENVIRONMENT: development

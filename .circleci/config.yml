@@ -15,7 +15,7 @@ commands:
           command: |
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
             # Delete bucket
-            aws s3 delete-bucket --bucket udapeople-<<parameters.workflow_id>> --recursive
+            aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
       - run:
           name: Destroy back-end cloudformation stack
           when: on_fail
@@ -228,7 +228,10 @@ jobs:
       - run:
           name: Run database migrations
           command: |
-            cd backend
+            cd backend      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
             npm install
             npm run migrations > migrations_dump.txt
       # Send migration status to kvdb.io
@@ -311,6 +314,10 @@ jobs:
           name: Install nodejs
           command: |
             apk add --update nodejs
+      - run:
+          name: Install rsync
+          command: |
+            apk add --update rsync
       - run:
           name: Install npm
           command: |

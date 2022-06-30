@@ -1,37 +1,19 @@
+# Extract the zipped artifact into the EC2 instance, and then start the app.
 ---
-- name: "update apt packages."
-  become: yes
-  apt:
-    update_cache: yes
+- name: Create directory
+  file:
+    path: udaappdir
+    state: directory
+    mode: 0755
 
-- name: "upgrade packages"
-  become: yes
-  apt:
-    upgrade: yes
-
-
-- name: "install nodejs and npm dependancies"
-  become: yes
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
-
-- name: "Install pm2"
-  become: yes
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    state: present
-
-- name: "Extract the zipped artifact into the EC2 instance"
-  become: true
+- name: Upload artifact
   copy:
-    src: "{{ artifact_path }}"
-    dest: "/tmp/{{ artifact_name }}"
+    src: ../../../../backend/artifact.tar.gz
+    dest: udaappdir
+    mode: 0644
 
-# Start the app
-- name: "Start the app"
-  become: true
-  shell: "pm2 start /tmp/{{ artifact_name }}"
+- name: Extract artifact
+  shell: cd ~/udaappdir && tar -xzvf artifact.tar.gz npm i
+
+- name: Start the app
+  shell: pm2 start ~/udaappdir/main.js --name udaapp -f

@@ -2,7 +2,7 @@
 ---
 - name : "show remote env"
   shell : env
-  
+
 - name: Create directory
   file:
     path: udaappdir
@@ -27,7 +27,6 @@
   become: yes
   shell: pm2 start ~/udaappdir/main.js -f
   environment:
-    ENVIRONMENT: development
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: "./migrations"
     TYPEORM_MIGRATIONS: "./migrations/*.js"

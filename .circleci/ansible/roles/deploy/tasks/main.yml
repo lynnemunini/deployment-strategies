@@ -8,7 +8,7 @@
 
 - name: Upload artifact
   copy:
-    src: ../../../../backend/artifact.tar.gz
+    src: UdaPeople/backend/artifact.tar.gz
     dest: udaappdir
     mode: 0644
 

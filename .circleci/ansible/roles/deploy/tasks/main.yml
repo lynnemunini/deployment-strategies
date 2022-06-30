@@ -7,15 +7,19 @@
     mode: 0755
 
 - name: Upload artifact
+  become: yes
   copy:
-    src: UdaPeople/backend/artifact.tar.gz
+    src: ../../backend/dist
     dest: udaappdir
 
-- name: Extract artifact
-  shell: cd ~/udaappdir && tar -xzvf artifact.tar.gz
+- name: Copy modules
+  become: yes
+  copy:
+    src: ../../backend/node_modules
+    dest: udaappdir
 
 - name: Start the app
-  shell: pm2 start ~/udaappdir/main.js --name udaapp -f
+  shell: pm2 start ~/udaappdir/main.js -f
   environment:
     ENVIRONMENT: development
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"

@@ -14,6 +14,8 @@ commands:
           when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
+            # Delete bucket
+            aws s3api delete-bucket --bucket udapeople-<<parameters.workflow_id>> --recursive
       - run:
           name: Destroy back-end cloudformation stack
           when: on_fail

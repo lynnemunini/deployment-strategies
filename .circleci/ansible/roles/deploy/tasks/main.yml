@@ -10,10 +10,20 @@
   copy:
     src: UdaPeople/backend/artifact.tar.gz
     dest: udaappdir
-    mode: 0644
 
 - name: Extract artifact
-  shell: cd ~/udaappdir && tar -xzvf artifact.tar.gz npm i
+  shell: cd ~/udaappdir && tar -xzvf artifact.tar.gz
 
 - name: Start the app
   shell: pm2 start ~/udaappdir/main.js --name udaapp -f
+  environment:
+    ENVIRONMENT: development
+    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+    TYPEORM_MIGRATIONS_DIR: "./migrations"
+    TYPEORM_MIGRATIONS: "./migrations/*.js"
+    TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
+    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"

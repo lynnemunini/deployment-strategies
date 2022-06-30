@@ -2,6 +2,7 @@
 ---
 - name : "show remote env"
   shell : env
+  
 - name: Create directory
   file:
     path: udaappdir
@@ -10,14 +11,14 @@
 
 - name: Upload artifact
   become: yes
-  copy:
+  synchronize:
     src: ../../backend/dist
     dest: udaappdir
     recursive: yes
 
 - name: Copy modules
   become: yes
-  copy:
+  synchronize:
     src: ../../backend/node_modules
     dest: udaappdir
     recursive: yes

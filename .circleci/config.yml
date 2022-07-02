@@ -322,13 +322,13 @@ jobs:
             cd backend
             npm i
             npm run build
-            cp package.json dist
+            cp ~/project/backend/package.json ~/project/backend/dist
             # Zip the directory
-            cd dist
+            cd ~/project/backend/dist
             zip -r dist.zip *
-            mv dist.zip ~/UdaPeople/.circleci/ansible/roles/deploy/files/
+            mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
 
-            cd ~/UdaPeople/.circleci/ansible
+            cd .circleci/ansible
             echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml

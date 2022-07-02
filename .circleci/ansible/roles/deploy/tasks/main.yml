@@ -5,18 +5,22 @@
 
 - name: Create directory
   file:
-    path: udaappdir
+    path: ~/udaappdir
     state: directory
     mode: 0755
 
 - name: Upload artifact
   copy:
     src: files/dist.zip
-    dest: udaappdir
+    dest: ~/udaappdir
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 - name: extract
-  shell: unzip -o dist.zip -d udaappdir
+  shell:
+    - cd ~/udaappdir
+    - unzip ~/udaappdir/dist.zip
+    - npm i
+
 
 - name: Start the app
   become: yes

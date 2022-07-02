@@ -16,10 +16,10 @@
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 - name: extract
-  shell:
-    - cd ~/udaappdir
-    - unzip ~/udaappdir/dist.zip
-    - npm i
+  shell: |
+    cd ~/udaappdir
+    unzip ~/udaappdir/dist.zip
+    npm i
 
 
 - name: Start the app

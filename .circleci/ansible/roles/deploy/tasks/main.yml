@@ -11,12 +11,12 @@
 
 - name: Upload artifact
   copy:
-    src: files/artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz
+    src: files/udaapp.zip
     dest: udaappdir
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 - name: extract
-  shell: tar -xzf udaappdir/artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz -C udaappdir
+  shell: unzip -o udaapp.zip -d udaappdir
 
 - name: Start the app
   become: yes

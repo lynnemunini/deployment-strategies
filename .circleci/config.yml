@@ -295,9 +295,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Install tar gzip
+          name: Install zip
           command: |
-            apk add --update tar gzip
+            apk add --update zip
       - run:
           name: Install ansible
           working_directory: ./.circleci/ansible
@@ -322,11 +322,11 @@ jobs:
             cd backend
             npm i
             npm run build
-            cp package.json dist
+            cp package.json udaapp
             # Zip the directory
-            cd dist
-            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz *
-            mv artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz ~/UdaPeople/.circleci/ansible/roles/deploy/files/
+            cd udaapp
+            zip -r udaapp.zip *
+            mv udaapp.zip ~/UdaPeople/.circleci/ansible/roles/deploy/files/
 
             cd ~/UdaPeople/.circleci/ansible
             echo "Contents of the inventory.txt file is ......."

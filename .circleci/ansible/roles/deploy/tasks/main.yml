@@ -18,12 +18,13 @@
   shell: |
     cd ~/udaappdir
     unzip ~/udaappdir/dist.zip
+    ls udaappdir
     npm i
 
 
 - name: Start the app
   become: yes
-  shell: pm2 start ./main.js -f
+  shell: pm2 start ~/udaappdir/index.js --name udaapp -f
   environment:
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: "./migrations"

@@ -3,7 +3,6 @@
   file:
     path: ~/udaappdir
     state: directory
-    mode: 0755
 
 - name: Upload artifact
   copy:
@@ -21,14 +20,12 @@
 
 - name: Start the app
   become: yes
-  shell: |
-    cd ~/udaappdir
-    npm start
+  shell: pm2 start ~/udaappdir/main.js --name backend -f
   environment:
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-    TYPEORM_MIGRATIONS_DIR: "./migrations"
-    TYPEORM_MIGRATIONS: "./migrations/*.js"
-    TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
+    TYPEORM_MIGRATIONS_DIR: "udaappdir/migrations"
+    TYPEORM_MIGRATIONS: "udaappdir/migrations/*.js"
+    TYPEORM_ENTITIES: "udaappdir/modules/domain/**/*.entity.js"
     TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
     TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
     TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"

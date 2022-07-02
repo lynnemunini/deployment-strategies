@@ -11,12 +11,12 @@
 
 - name: Upload artifact
   copy:
-    src: files/udaapp.zip
+    src: files/dist.zip
     dest: udaappdir
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 - name: extract
-  shell: unzip -o udaapp.zip -d udaappdir
+  shell: unzip -o dist.zip -d udaappdir
 
 - name: Start the app
   become: yes

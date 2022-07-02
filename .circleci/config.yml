@@ -322,11 +322,11 @@ jobs:
             cd backend
             npm i
             npm run build
-            cp package.json udaapp
+            cp package.json dist
             # Zip the directory
-            cd udaapp
-            zip -r udaapp.zip *
-            mv udaapp.zip ~/UdaPeople/.circleci/ansible/roles/deploy/files/
+            cd dist
+            zip -r dist.zip *
+            mv dist.zip ~/UdaPeople/.circleci/ansible/roles/deploy/files/
 
             cd ~/UdaPeople/.circleci/ansible
             echo "Contents of the inventory.txt file is ......."

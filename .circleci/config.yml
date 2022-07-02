@@ -312,24 +312,23 @@ jobs:
           command: |
             apk add --update nodejs
       - run:
-          name: Install rsync
-          command: |
-            apk add --update rsync
-
-      - run:
           name: Install npm
           command: |
             apk add --update npm
       - run:
           name: Deploy backend
           command: |
+            mkdir -p .circleci/ansible/roles/deploy/files
             cd backend
             npm i
             npm run build
-            cd ..
+            cp ~/UdaPeople/backend/package.json ~/UdaPeople/backend/dist
             # Zip the directory
-            tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
+            cd ~/UdaPeople/backend/dist
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz *
+            mv artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz ~/UdaPeople/.circleci/ansible/roles/deploy/files/
+
+            cd ~/UdaPeople/.circleci/ansible
             echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml

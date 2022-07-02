@@ -3,26 +3,24 @@
 - name : "show remote env"
   shell : env
 
+- name: Create directory
+  file:
+    path: udaappdir
+    state: directory
+    mode: 0755
 
 - name: Upload artifact
-  become: yes
-  synchronize:
-    src: ../../backend/dist
-    dest: /home/ubuntu/udaappdir
-    recursive: yes
+  copy:
+    src: ~/UdaPeople/.circleci/ansible/roles/deploy/files/artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz
+    dest: udaappdir
 
-- name: Copy modules
-  become: yes
-  synchronize:
-    src: ../../backend/node_modules
-    dest: home/ubuntu/udaappdir
-    recursive: yes
+# Extract the zipped artifact into the EC2 instance, and then start the app.
+- name: extract
+  shell: tar -xzf udaappdir/artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz -C udaappdir
 
 - name: Start the app
   become: yes
   shell: pm2 start ~/udaappdir/main.js -f
-  args:
-    chdir: /home/ubuntu/udaappdir/dist
   environment:
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: "./migrations"

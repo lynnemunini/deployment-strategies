@@ -24,7 +24,7 @@
 
 - name: Start the app
   become: yes
-  shell: pm2 start ~/udaappdir/main.js -f
+  shell: pm2 start ~/udaappdir/main.js --name backend -f
   environment:
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: "./migrations"

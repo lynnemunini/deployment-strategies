@@ -3,29 +3,26 @@
 - name : "show remote env"
   shell : env
 
-- name: Create directory
-  file:
-    path: udaappdir
-    state: directory
-    mode: 0755
 
 - name: Upload artifact
   become: yes
   synchronize:
     src: ../../backend/dist
-    dest: udaappdir
+    dest: /home/ubuntu/udaappdir
     recursive: yes
 
 - name: Copy modules
   become: yes
   synchronize:
     src: ../../backend/node_modules
-    dest: udaappdir
+    dest: home/ubuntu/udaappdir
     recursive: yes
 
 - name: Start the app
   become: yes
   shell: pm2 start ~/udaappdir/main.js -f
+  args:
+    chdir: /home/ubuntu/udaappdir/dist
   environment:
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: "./migrations"

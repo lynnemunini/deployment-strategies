@@ -11,7 +11,7 @@
 
 - name: Upload artifact
   copy:
-    src: ~/UdaPeople/.circleci/ansible/roles/deploy/files/artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz
+    src: files/artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz
     dest: udaappdir
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.

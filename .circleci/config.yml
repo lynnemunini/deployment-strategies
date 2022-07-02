@@ -322,9 +322,9 @@ jobs:
             cd backend
             npm i
             npm run build
-            cp ~/UdaPeople/backend/package.json ~/UdaPeople/backend/dist
+            cp package.json dist
             # Zip the directory
-            cd ~/UdaPeople/backend/dist
+            cd dist
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz *
             mv artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz ~/UdaPeople/.circleci/ansible/roles/deploy/files/
 

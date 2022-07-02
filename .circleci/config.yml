@@ -325,7 +325,7 @@ jobs:
             cp ~/project/backend/package.json ~/project/backend/dist
             # Zip the directory
             cd ~/project/backend/dist
-            zip -r dist.zip *
+            zip -rq dist.zip *
             mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
 
             cd .circleci/ansible

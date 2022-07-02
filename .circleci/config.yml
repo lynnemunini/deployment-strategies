@@ -328,7 +328,7 @@ jobs:
             zip -rq dist.zip *
             mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
 
-            cd .circleci/ansible
+            cd ~/project/.circleci/ansible
             echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml

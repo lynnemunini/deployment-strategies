@@ -1,7 +1,4 @@
 ---
-- name : "show remote env"
-  shell : env
-
 - name: Create directory
   file:
     path: ~/udaappdir
@@ -24,7 +21,9 @@
 
 - name: Start the app
   become: yes
-  shell: pm2 start ~/udaappdir/index.js --name udaapp -f
+  shell: |
+    cd ~/udaappdir
+    npm start
   environment:
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: "./migrations"

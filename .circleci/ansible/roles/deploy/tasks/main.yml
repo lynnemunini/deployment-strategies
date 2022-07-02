@@ -1,4 +1,3 @@
-# Extract the zipped artifact into the EC2 instance, and then start the app.
 ---
 - name : "show remote env"
   shell : env
@@ -24,7 +23,7 @@
 
 - name: Start the app
   become: yes
-  shell: pm2 start ~/udaappdir/main.js --name backend -f
+  shell: pm2 start ./main.js -f
   environment:
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: "./migrations"

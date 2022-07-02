@@ -197,7 +197,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: $FINGERPRINT_ID
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: Install dependencies
           working_directory: ./.circleci/ansible
@@ -222,8 +222,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
+      - restore_cache:
+          keys: [backend-build]
       # Run database migrationss
       - run:
           name: Run database migrations
@@ -252,7 +252,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: Install AWS CLI dependencies
           command: |
@@ -293,7 +293,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["c5:81:c8:a1:27:13:98:b6:e6:67:c7:df:3d:29:83:37"]
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: Install zip
           command: |

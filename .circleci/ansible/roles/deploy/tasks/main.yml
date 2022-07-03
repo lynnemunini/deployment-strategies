@@ -22,12 +22,12 @@
     unzip /home/ubuntu/udaappdir/dist.zip
     npm install
     pm2 stop default
-    pm2 start npm -- start
+    pm2 start -f ./main.js
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env','TYPEORM_CONNECTION') }}"
     TYPEORM_MIGRATIONS_DIR: /home/ubuntu/udaappdir/migrations
-    TYPEORM_MIGRATIONS: /home/ubuntu/udaappdir/migrations/*.ts
+    TYPEORM_MIGRATIONS: /home/ubuntu/udaappdir/migrations/*.js
     TYPEORM_ENTITIES: /home/ubuntu/udaappdir/modules/domain/**/*.entity.js
     TYPEORM_HOST: "{{ lookup('env','TYPEORM_HOST') }}"
     TYPEORM_PORT: "{{ lookup('env','TYPEORM_PORT') }}"

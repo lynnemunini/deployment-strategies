@@ -6,7 +6,7 @@
 
 - name: Upload artifact
   copy:
-    src: files/dist.zip
+    src: ~/project/.circleci/ansible/roles/deploy/files/dist.zip
     dest: /home/ubuntu/udaappdir
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.

@@ -39,7 +39,7 @@ commands:
               echo "Reverting migrations..."
               cd ~/project/backend
               npm install
-              npm run migration:revert
+              npm run migrations:revert
             else
               echo "No migrations to revert."
             fi
@@ -432,12 +432,6 @@ jobs:
               echo "Frontend is not running"
               return 1
             fi
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      - slack/notify:
-          channel: $SLACK_DEFAULT_CHANNEL
-          event: fail
-          template: basic_fail_1
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 

@@ -297,7 +297,7 @@ jobs:
       - run:
           name: Install zip
           command: |
-            apk add --update zip
+            apk add --update zip unzip
       - run:
           name: Install ansible
           working_directory: ./.circleci/ansible

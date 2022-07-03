@@ -14,7 +14,7 @@
   shell: |
     cd ~/udaappdir
     unzip ~/udaappdir/dist.zip
-    ls udaappdir
+    ls ~/udaappdir/dist
 
 
 - name: Start the app

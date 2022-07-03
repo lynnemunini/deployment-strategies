@@ -252,7 +252,7 @@ jobs:
       - run:
           name: Run database migrations
           command: |
-            cd backend/src
+            cd backend
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt

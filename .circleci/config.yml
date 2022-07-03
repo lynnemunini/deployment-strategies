@@ -260,7 +260,7 @@ jobs:
       - run:
           name: Send migration status to kvdb.ij
           command: |
-            if grep -q "has been executed successfully." ~/UdaPeople/backend/migrations_dump.txt;
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt;
             then
               curl https://https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi

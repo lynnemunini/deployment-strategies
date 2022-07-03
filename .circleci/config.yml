@@ -334,7 +334,7 @@ jobs:
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      - # TODO: Revert migration on fail
+        # TODO: Revert migration on fail
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail

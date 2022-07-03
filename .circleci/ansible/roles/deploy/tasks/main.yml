@@ -23,3 +23,14 @@
     npm install
     pm2 stop default
     pm2 start npm -- start
+  environment:
+    ENVIRONMENT: production
+    TYPEORM_CONNECTION: "{{ lookup('env','TYPEORM_CONNECTION') }}"
+    TYPEORM_MIGRATIONS_DIR: /home/ubuntu/udaappdir/migrations
+    TYPEORM_MIGRATIONS: /home/ubuntu/udaappdir/migrations/*.ts
+    TYPEORM_ENTITIES: /home/ubuntu/udaappdir/modules/domain/**/*.entity.js
+    TYPEORM_HOST: "{{ lookup('env','TYPEORM_HOST') }}"
+    TYPEORM_PORT: "{{ lookup('env','TYPEORM_PORT') }}"
+    TYPEORM_USERNAME: "{{ lookup('env','TYPEORM_USERNAME') }}"
+    TYPEORM_PASSWORD: "{{ lookup('env','TYPEORM_PASSWORD') }}"
+    TYPEORM_DATABASE: "{{ lookup('env','TYPEORM_DATABASE') }}"

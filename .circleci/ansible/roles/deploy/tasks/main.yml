@@ -9,13 +9,6 @@
     src: ~/project/.circleci/ansible/roles/deploy/files/dist.zip
     dest: /home/ubuntu/udaappdir
 
-- name: Copy node modules
-  become: yes
-  copy:
-    src: ~/project/backend/node_modules
-    dest: /home/ubuntu/udaappdir
-
-
 - name: Install unzip
   become: true
   apt:

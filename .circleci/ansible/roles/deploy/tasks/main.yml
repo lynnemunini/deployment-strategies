@@ -9,17 +9,17 @@
     src: ~/project/.circleci/ansible/roles/deploy/files/dist.zip
     dest: /home/ubuntu/udaappdir
 
+- name: Install unzip
+  become: true
+  apt:
+    name: unzip
+    state: present
+
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 - name: extract artifact
   shell: |
     cd /home/ubuntu/udaappdir
     unzip /home/ubuntu/udaappdir/dist.zip
-    cd /home/ubuntu/udaappdir/dist
-    ls /home/ubuntu/udaappdir/dist
-
-- name: Start the app
-  become: yes
-  shell: |
     npm install
     pm2 stop default
-    pm2 start npm --start
+    pm2 start npm -- start

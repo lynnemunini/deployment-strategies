@@ -182,6 +182,8 @@ jobs:
             echo ${BACKEND_IP} > .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:
@@ -279,8 +281,6 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - persist_to_workspace:
-          root: ~/
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:

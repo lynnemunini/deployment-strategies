@@ -14,13 +14,35 @@ commands:
           when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
-            # Delete bucket
+            # Delete files uploaded from the s3 bucket.
             aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
       - run:
           name: Destroy back-end cloudformation stack
           when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
+  # Rollback any migrations that were successfully applied.
+  revert-migrations:
+    description: Revert migrations that were successfully applied.
+    parameters:
+      workflow_id:
+        type: string
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+          # Get kvdb url
+          SUCCESS=$(curl --insecure https://https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_<<parameters.workflow_id>>)
+          # Logic for reverting the database state
+          if ((SUCCESS == 1)); then
+            echo "Reverting migrations..."
+            cd ~/project/backend
+            npm install
+            npm run migrate:revert
+          else
+            echo "No migrations to revert."
+          fi
 
 jobs:
   #BUILD PHASE
@@ -289,6 +311,8 @@ jobs:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 
   deploy-backend:
@@ -340,11 +364,12 @@ jobs:
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-        # TODO: Revert migration on fail
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   # SMOKETEST PHASE
   # Docker image
@@ -402,11 +427,19 @@ jobs:
             if curl -s ${FRONTEND_URL} | grep "Welcome"
             then
               echo "Frontend is up and running"
-              return 1
+              return 0
             else
               echo "Frontend is not running"
               return 1
             fi
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 workflows:
   default:

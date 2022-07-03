@@ -361,7 +361,7 @@ jobs:
             cd backend
             npm i
             npm run build
-            cp ~/project/backend/package.json ~/project/backend/dist
+            cp ~/project/backend/node_modules ~/project/backend/dist
             # Zip the directory
             cd ~/project/backend/dist
             zip -rq dist.zip *

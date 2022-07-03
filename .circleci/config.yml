@@ -33,7 +33,7 @@ commands:
           when: on_fail
           command: |
             # Get kvdb url
-            SUCCESS=$(curl --insecure https://https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_<<parameters.workflow_id>>)
+            SUCCESS=$(curl --insecure https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_<<parameters.workflow_id>>)
             # Logic for reverting the database state
             if ((SUCCESS == 1)); then
               echo "Reverting migrations..."

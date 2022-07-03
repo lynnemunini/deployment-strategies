@@ -152,7 +152,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
@@ -253,8 +252,6 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      # install tar utility
-      - run: yum install -- -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
@@ -354,7 +351,6 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
-      - run: yum install -y tar gzip
       - attach_workspace:
           at: ~/
       # Install dependencies like curl, nodejs, npm, awscli

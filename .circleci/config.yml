@@ -353,24 +353,27 @@ jobs:
       - run:
           name: Install npm
           command: |
-            apk add --update npm
+            apk add --update npm openssh rsync
       - run:
           name: Deploy backend
           command: |
-            mkdir -p .circleci/ansible/roles/deploy/files
-            cd backend
-            npm i
-            npm run build
-            cp ~/project/backend/node_modules ~/project/backend/dist
-            # Zip the directory
-            cd ~/project/backend/dist
-            zip -rq dist.zip *
-            mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
+            # mkdir -p .circleci/ansible/roles/deploy/files
+            # cd backend
+            # npm i
+            # npm run build
+            # cp ~/project/backend/package.json ~/project/backend/dist
+            # # Zip the directory
+            # cd ~/project/backend/dist
+            # zip -rq dist.zip *
+            # mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
 
+            # cd ~/project/.circleci/ansible
+            # echo "Contents of the inventory.txt file is ......."
+            # cat inventory.txt
+            # ansible-playbook -i inventory.txt deploy-backend.yml
             cd ~/project/.circleci/ansible
-            echo "Contents of the inventory.txt file is ......."
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml -vv
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:

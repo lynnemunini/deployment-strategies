@@ -11,10 +11,10 @@
 
 - name: Copy node modules
   become: yes
-  synchronize:
+  copy:
     src: ~/project/backend/node_modules
     dest: /home/ubuntu/udaappdir
-    recursive: true
+
 
 - name: Install unzip
   become: true

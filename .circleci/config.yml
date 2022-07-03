@@ -257,7 +257,7 @@ jobs:
             npm run migrations > migrations_dump.txt
       # Send migration status to kvdb.io
       - run:
-          name: Send migration status to kvdb.io
+          name: Send migration status to kvdb.ij
           command: |
             if grep -q "has been executed successfully." ~/UdaPeople/backend/migrations_dump.txt;
             then
@@ -328,6 +328,11 @@ jobs:
           name: Install zip
           command: |
             apk add --update zip unzip
+      # install curl
+      - run:
+          name: Install curl
+          command: |
+            apk add --update curl
       - run:
           name: Install ansible
           working_directory: ./.circleci/ansible

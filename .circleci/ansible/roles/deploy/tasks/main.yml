@@ -11,6 +11,7 @@
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 - name: extract
+  become: yes
   # install unzip
   apt:
     name: unzip

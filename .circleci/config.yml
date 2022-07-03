@@ -270,9 +270,9 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" \
               --query "Reservations[*].Instances[*].PublicIpAddress" \
               --output text)
-            export API_URL="http://${BACKEND_IP}:3000"
+            export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
-            echo API_URL="http://${BACKEND_IP}:3000" > frontend/.env
+            echo API_URL="http://${BACKEND_IP}:3030" > frontend/.env
             cat frontend/.env
       # Deploy frontend objects
       - run:
@@ -383,7 +383,7 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" \
               --query "Reservations[*].Instances[*].PublicIpAddress" \
               --output text)
-            export API_URL="http://${BACKEND_IP}:3000"
+            export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"
             then

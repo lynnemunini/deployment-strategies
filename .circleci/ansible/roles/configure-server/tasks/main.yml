@@ -16,13 +16,6 @@
     state: latest
     update_cache: yes
 
-- name: "install zip and unzip dependencies"
-  become: true
-  apt:
-    name: ["unzip", "zip"]
-    state: latest
-    update_cache: yes
-
 # Install pm2
 - name: "install pm2"
   become: true

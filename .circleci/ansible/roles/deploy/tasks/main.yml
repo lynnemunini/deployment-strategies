@@ -1,20 +1,20 @@
 ---
 - name: Create directory
   file:
-    path: ~/udaappdir
+    path: /home/ubuntu/udaappdir
     state: directory
 
 - name: Upload artifact
   copy:
     src: files/dist.zip
-    dest: ~/udaappdir
+    dest: /home/ubuntu/udaappdir
 
 # Extract the zipped artifact into the EC2 instance, and then start the app.
 - name: extract
   shell: |
-    cd ~/udaappdir
-    unzip ~/udaappdir/dist.zip
-    ls ~/udaappdir/dist
+    cd /home/ubuntu/udaappdir
+    unzip /home/ubuntu/udaappdir/dist.zip
+    ls /home/ubuntu/udaappdir/dist
 
 
 - name: Start the app
@@ -23,13 +23,3 @@
     npm install
     pm2 stop default
     pm2 start npm --start
-  environment:
-    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-    TYPEORM_MIGRATIONS_DIR: "udaappdir/migrations"
-    TYPEORM_MIGRATIONS: "udaappdir/migrations/*.js"
-    TYPEORM_ENTITIES: "udaappdir/modules/domain/**/*.entity.js"
-    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"

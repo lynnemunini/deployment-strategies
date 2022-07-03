@@ -334,10 +334,69 @@ jobs:
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - # TODO: Revert migration on fail
       - slack/notify:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
+
+  # SMOKETEST PHASE
+  # Docker image
+  # Install dependencies like curl, nodejs, npm, awscli
+  # Run backend smoketests
+  # Run frontend smoketests
+  smoke-test:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      # Install dependencies like curl, nodejs, npm, awscli
+      - run:
+          name: Install curl
+          command: |
+            apk add --update curl
+      - run:
+          name: Install nodejs
+          command: |
+            apk add --update nodejs
+      - run:
+          name: Install npm
+          command: |
+            apk add --update npm
+      - run:
+          name: Install aws cli
+          command: |
+            pip install awscli
+      - run:
+          name: Run backend smoketests
+          command: |
+            # Fetch and prepare BACKEND_IP env var
+            export API_URL="http://${BACKEND_IP}:3000"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+              echo "Backend is up and running"
+              return 0
+            else
+              echo "Backend is not running"
+              return 1
+            fi
+      - run:
+          name: Run frontend smoketests
+          command: |
+            # Fetch and prepare FRONTEND_IP env var
+            export FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
+            echo "${FRONTEND_URL}"
+            if curl -s ${FRONTEND_URL} | grep "Welcome"
+            then
+              echo "Frontend is up and running"
+              return 1
+            else
+              echo "Frontend is not running"
+              return 1
+            fi
 
 workflows:
   default:
@@ -362,3 +421,5 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-frontend, deploy-backend]

@@ -266,7 +266,6 @@ jobs:
               curl https://https://kvdb.io/McQbGiQSmDSEvKJhVqyfcn/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             else
               echo "Migration failed"
-              exit 1
             fi
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}

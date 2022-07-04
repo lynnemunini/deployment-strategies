@@ -1,18 +1,15 @@
 ---
 - name: Create directory
   file:
-    become: true
     path: /home/ubuntu/udaappdir
     state: directory
 
 - name: Upload artifact
   copy:
-    become: true
     src: ~/project/.circleci/ansible/roles/deploy/files/dist.zip
     dest: /home/ubuntu/udaappdir
 
 - name: Install unzip
-  become: true
   apt:
     name: unzip
     state: present

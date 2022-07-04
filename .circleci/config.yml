@@ -508,9 +508,9 @@ jobs:
               echo "Old workflow id is different from current workflow id"
               echo "Removing stacks/s3 bucket"
               # Remove stacks
-              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              aws s3 rm "s3://udapeople-${OLD_WORKFLOW_ID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OLD_WORKFLOW_ID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OLD_WORKFLOW_ID}"
             fi
 
 workflows:

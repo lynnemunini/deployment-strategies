@@ -1,1 +1,2 @@
 URL01 - https://github.com/lynnemunini/UdaPeople
+URL02 - Public url for s3 bucket (aka front-end)

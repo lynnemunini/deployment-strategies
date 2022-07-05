@@ -1,2 +1,0 @@
-URL01 - https://github.com/lynnemunini/UdaPeople
-URL02 - http://udapeople-691bbaf.s3-website-us-east-1.amazonaws.com

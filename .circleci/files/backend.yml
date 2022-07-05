@@ -21,10 +21,10 @@ Resources:
           FromPort: 3030
           ToPort: 3030
           CidrIp: 0.0.0.0/0
-        # Allow port 9090 for Prometheus.
+        # Allow port 9100 for prometheus.
         - IpProtocol: tcp
-          FromPort: 9090
-          ToPort: 9090
+          FromPort: 9100
+          ToPort: 9100
           CidrIp: 0.0.0.0/0
           
   EC2Instance:

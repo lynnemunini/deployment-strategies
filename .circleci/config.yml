@@ -433,7 +433,7 @@ jobs:
             if curl -s ${FRONTEND_URL} | grep "Welcome"
             then
               echo "Frontend is up and running"
-              return 0
+              return 1
             else
               echo "Frontend is not running"
               return 1

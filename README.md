@@ -27,3 +27,8 @@ This directory contains the files for the backend of the application.
 [The frontend](frontend)
 
 This directory contains the files for the frontend of the application.
+
+[Prometheus](.circleci/ansible/roles/configure-prometheus-node-exporter)
+
+This directory contains the files for the Prometheus node exporter. This is used to monitor the application.
+It will be used to Surface critical server errors for diagnosis using centralized structured logging.
